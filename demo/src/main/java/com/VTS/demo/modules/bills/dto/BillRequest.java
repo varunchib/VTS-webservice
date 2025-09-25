@@ -25,6 +25,7 @@ public class BillRequest {
     private String currencyCode;
     private UUID createdBy;
     private List<ItemDto> items;
+    private BigDecimal profit;
     
 	public String getFlag() {
 		return flag;
@@ -143,6 +144,13 @@ public class BillRequest {
 	public void setItems(List<ItemDto> items) {
 		this.items = items;
 	}
+	public BigDecimal getProfit() {
+		return profit;
+	}
+	public void setProfit(BigDecimal profit) {
+		this.profit = profit;
+	}
+	
 
     
 }

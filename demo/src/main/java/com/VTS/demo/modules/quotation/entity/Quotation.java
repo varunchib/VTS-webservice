@@ -10,175 +10,204 @@ import java.util.UUID;
 @Table(name = "quotations", schema = "dnrcore")
 public class Quotation {
 
-    @Id
-    @GeneratedValue(generator = "uuid2")
-    @Column(columnDefinition = "UUID")
-    private UUID id;
+	@Id
+	@GeneratedValue(generator = "uuid2")
+	@Column(columnDefinition = "UUID")
+	private UUID id;
 
-    @Column(name = "reference_no")
-    private String referenceNo;
+	@Column(name = "reference_no")
+	private String referenceNo;
 
-    @Column(name = "date")
-    private LocalDate date;
+	@Column(name = "date")
+	private LocalDate date;
 
-    @Column(name = "expiration_at")
-    private LocalDate expirationAt;
+	@Column(name = "expiration_at")
+	private LocalDate expirationAt;
 
-    @Column(name = "company_name")
-    private String companyName;
+	@Column(name = "company_name")
+	private String companyName;
 
-    @Column(name = "attention")
-    private String attention;
+	@Column(name = "attention")
+	private String attention;
 
-    @Column(name = "designation")
-    private String designation;
+	@Column(name = "designation")
+	private String designation;
 
-    @Column(name = "email")
-    private String email;
+	@Column(name = "email")
+	private String email;
 
-    @Column(name = "phone")
-    private String phone;
+	@Column(name = "phone")
+	private String phone;
 
-    @Column(name = "address")
-    private String address;
+	@Column(name = "address")
+	private String address;
 
-    @Column(name = "website")
-    private String website;
+	@Column(name = "website")
+	private String website;
 
-    @Column(name = "subject")
-    private String subject;
+	@Column(name = "subject")
+	private String subject;
 
-    @Column(name = "project")
-    private String project;
-    
-    @Column(name = "title")
-    private String title;
-    
-    @Column(name = "currency_code", length = 3)
-    private String currencyCode;
-    
-    // Optional JSON snapshot or misc data (if you use it)
-    @Column(name = "table_data")
-    private String tableData;
+	@Column(name = "project")
+	private String project;
 
-    @Column(name = "created_by", columnDefinition = "UUID")
-    private UUID createdBy;
+	@Column(name = "title")
+	private String title;
 
-    @Column(name = "author_name")
-    private String authorName;
+	@Column(name = "currency_code", length = 3)
+	private String currencyCode;
 
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
+	// Optional JSON snapshot or misc data (if you use it)
+	@Column(name = "table_data")
+	private String tableData;
 
-    @Column(name = "status")
-    private String status;
+	@Column(name = "created_by", columnDefinition = "UUID")
+	private UUID createdBy;
 
-    @Column(name = "doc_version")
-    private String docVersion;
+	@Column(name = "author_name")
+	private String authorName;
 
-    // NEW: VAT percentage/value stored for this quotation
-    @Column(name = "vat")
-    private BigDecimal vat;
-    
-    @Column(name = "scopes", columnDefinition = "jsonb")
-    private String scopes;
+	@Column(name = "created_at")
+	private LocalDateTime createdAt;
 
-    /* ---------- Getters / Setters ---------- */
+	@Column(name = "status")
+	private String status;
 
-    public Quotation() {}
+	@Column(name = "doc_version")
+	private String docVersion;
 
-    public UUID getId() {
-        return id;
-    }
-    public void setId(UUID id) {
-        this.id = id;
-    }
+	// NEW: VAT percentage/value stored for this quotation
+	@Column(name = "vat")
+	private BigDecimal vat;
 
-    public String getReferenceNo() {
-        return referenceNo;
-    }
-    public void setReferenceNo(String referenceNo) {
-        this.referenceNo = referenceNo;
-    }
+	@Column(name = "scopes", columnDefinition = "jsonb")
+	private String scopes;
 
-    public LocalDate getDate() {
-        return date;
-    }
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
+	@Column(name = "ui_number")
+	private String uiNumber;
 
-    public LocalDate getExpirationAt() {
-        return expirationAt;
-    }
-    public void setExpirationAt(LocalDate expirationAt) {
-        this.expirationAt = expirationAt;
-    }
+	@Column(name = "approval_date")
+	private LocalDate approvalDate;
 
-    public String getCompanyName() {
-        return companyName;
-    }
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
-    }
+	@Column(name = "completion_time")
+	private LocalDateTime completionTime;
 
-    public String getAttention() {
-        return attention;
-    }
-    public void setAttention(String attention) {
-        this.attention = attention;
-    }
+	@Column(name = "order_time")
+	private LocalDateTime orderTime;
 
-    public String getDesignation() {
-        return designation;
-    }
-    public void setDesignation(String designation) {
-        this.designation = designation;
-    }
+	@Column(name = "internal_completion_timeline")
+	private String internalCompletionTimeline;
 
-    public String getEmail() {
-        return email;
-    }
-    public void setEmail(String email) {
-        this.email = email;
-    }
+	/* ---------- Getters / Setters ---------- */
 
-    public String getPhone() {
-        return phone;
-    }
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
+	public Quotation() {
+	}
 
-    public String getAddress() {
-        return address;
-    }
-    public void setAddress(String address) {
-        this.address = address;
-    }
+	public UUID getId() {
+		return id;
+	}
 
-    public String getWebsite() {
-        return website;
-    }
-    public void setWebsite(String website) {
-        this.website = website;
-    }
+	public void setId(UUID id) {
+		this.id = id;
+	}
 
-    public String getSubject() {
-        return subject;
-    }
-    public void setSubject(String subject) {
-        this.subject = subject;
-    }
+	public String getReferenceNo() {
+		return referenceNo;
+	}
 
-    public String getProject() {
-        return project;
-    }
-    public void setProject(String project) {
-        this.project = project;
-    }
-    
-    public String getTitle() {
+	public void setReferenceNo(String referenceNo) {
+		this.referenceNo = referenceNo;
+	}
+
+	public LocalDate getDate() {
+		return date;
+	}
+
+	public void setDate(LocalDate date) {
+		this.date = date;
+	}
+
+	public LocalDate getExpirationAt() {
+		return expirationAt;
+	}
+
+	public void setExpirationAt(LocalDate expirationAt) {
+		this.expirationAt = expirationAt;
+	}
+
+	public String getCompanyName() {
+		return companyName;
+	}
+
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
+	}
+
+	public String getAttention() {
+		return attention;
+	}
+
+	public void setAttention(String attention) {
+		this.attention = attention;
+	}
+
+	public String getDesignation() {
+		return designation;
+	}
+
+	public void setDesignation(String designation) {
+		this.designation = designation;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getWebsite() {
+		return website;
+	}
+
+	public void setWebsite(String website) {
+		this.website = website;
+	}
+
+	public String getSubject() {
+		return subject;
+	}
+
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
+
+	public String getProject() {
+		return project;
+	}
+
+	public void setProject(String project) {
+		this.project = project;
+	}
+
+	public String getTitle() {
 		return title;
 	}
 
@@ -195,53 +224,60 @@ public class Quotation {
 	}
 
 	public String getTableData() {
-        return tableData;
-    }
-    public void setTableData(String tableData) {
-        this.tableData = tableData;
-    }
+		return tableData;
+	}
 
-    public UUID getCreatedBy() {
-        return createdBy;
-    }
-    public void setCreatedBy(UUID createdBy) {
-        this.createdBy = createdBy;
-    }
+	public void setTableData(String tableData) {
+		this.tableData = tableData;
+	}
 
-    public String getAuthorName() {
-        return authorName;
-    }
-    public void setAuthorName(String authorName) {
-        this.authorName = authorName;
-    }
+	public UUID getCreatedBy() {
+		return createdBy;
+	}
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
+	public void setCreatedBy(UUID createdBy) {
+		this.createdBy = createdBy;
+	}
 
-    public String getStatus() {
-        return status;
-    }
-    public void setStatus(String status) {
-        this.status = status;
-    }
+	public String getAuthorName() {
+		return authorName;
+	}
 
-    public String getDocVersion() {
-        return docVersion;
-    }
-    public void setDocVersion(String docVersion) {
-        this.docVersion = docVersion;
-    }
+	public void setAuthorName(String authorName) {
+		this.authorName = authorName;
+	}
 
-    public BigDecimal getVat() {
-        return vat;
-    }
-    public void setVat(BigDecimal vat) {
-        this.vat = vat;
-    }
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getDocVersion() {
+		return docVersion;
+	}
+
+	public void setDocVersion(String docVersion) {
+		this.docVersion = docVersion;
+	}
+
+	public BigDecimal getVat() {
+		return vat;
+	}
+
+	public void setVat(BigDecimal vat) {
+		this.vat = vat;
+	}
 
 	public String getScopes() {
 		return scopes;
@@ -250,5 +286,45 @@ public class Quotation {
 	public void setScopes(String scopes) {
 		this.scopes = scopes;
 	}
-    
+
+	public String getUiNumber() {
+		return uiNumber;
+	}
+
+	public void setUiNumber(String uiNumber) {
+		this.uiNumber = uiNumber;
+	}
+
+	public LocalDate getApprovalDate() {
+		return approvalDate;
+	}
+
+	public void setApprovalDate(LocalDate approvalDate) {
+		this.approvalDate = approvalDate;
+	}
+
+	public LocalDateTime getCompletionTime() {
+		return completionTime;
+	}
+
+	public void setCompletionTime(LocalDateTime completionTime) {
+		this.completionTime = completionTime;
+	}
+
+	public LocalDateTime getOrderTime() {
+		return orderTime;
+	}
+
+	public void setOrderTime(LocalDateTime orderTime) {
+		this.orderTime = orderTime;
+	}
+
+	public String getInternalCompletionTimeline() {
+		return internalCompletionTimeline;
+	}
+
+	public void setInternalCompletionTimeline(String internalCompletionTimeline) {
+		this.internalCompletionTimeline = internalCompletionTimeline;
+	}
+
 }

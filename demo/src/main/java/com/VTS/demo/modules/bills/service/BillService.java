@@ -37,7 +37,7 @@ public class BillService {
     public JsonNode saveOrUpdateBill(BillRequest request) {
         return jdbcTemplate.execute((Connection con) -> {
             try {
-                CallableStatement cs = con.prepareCall("{ call dnrcore.prr_add_bill_details(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) }");
+                CallableStatement cs = con.prepareCall("{ call dnrcore.prr_add_bill_details(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) }");
 
                 cs.setString(1, request.getFlag());
                 cs.setObject(2, request.getId());
@@ -60,12 +60,12 @@ public class BillService {
 
                 // items JSONB
                 cs.setObject(19, objectMapper.writeValueAsString(request.getItems()), Types.OTHER); // p_i_items
-
-                cs.registerOutParameter(20, Types.OTHER); // p_json_result
+                cs.setObject(20, request.getProfit());
+                cs.registerOutParameter(21, Types.OTHER); // p_json_result
 
                 cs.execute();
 
-                Object result = cs.getObject(20);
+                Object result = cs.getObject(21);
                 return objectMapper.readTree(result.toString());
 
             } catch (Exception e) {
