@@ -61,46 +61,48 @@ public class StoredProcClient {
     /**
      * For prr_create_quotation stored procedure.
      */
+ // StoredProcClient.java
     public JsonNode callCreateQuotationProc(String procName, Map<String, Object> inputParams) {
         logger.debug("Calling create quotation procedure: {} with parameters: {}", procName, inputParams);
-        
+
         try {
             SimpleJdbcCall call = new SimpleJdbcCall(jdbcTemplate)
                     .withSchemaName("dnrcore")
                     .withProcedureName(procName)
                     .withoutProcedureColumnMetaDataAccess()
                     .declareParameters(
-                        
-                        
-                        // Input parameters with explicit types
-                    	new SqlParameter("p_i_flag", Types.VARCHAR),
-                        new SqlParameter("p_i_reference_no", Types.VARCHAR),
-                        new SqlParameter("p_i_date", Types.DATE),
-                        new SqlParameter("p_i_expiration_at", Types.DATE),
-                        new SqlParameter("p_i_company_name", Types.VARCHAR),
-                        new SqlParameter("p_i_attention", Types.VARCHAR),
-                        new SqlParameter("p_i_designation", Types.VARCHAR),
-                        new SqlParameter("p_i_email", Types.VARCHAR),
-                        new SqlParameter("p_i_phone", Types.VARCHAR),
-                        new SqlParameter("p_i_address", Types.VARCHAR),
-                        new SqlParameter("p_i_website", Types.VARCHAR),
-                        new SqlParameter("p_i_subject", Types.VARCHAR),
-                        new SqlParameter("p_i_project", Types.VARCHAR),
-                        
-                        new SqlParameter("p_i_title", Types.VARCHAR),
-                        
-                        new SqlParameter("p_i_currency_code", Types.VARCHAR),
-                        
-                        new SqlParameter("p_i_vat", Types.NUMERIC),
-                        // JSON parameters as TEXT
-                        new SqlParameter("p_i_columns", Types.VARCHAR),
-                        new SqlParameter("p_i_rows", Types.VARCHAR),
-                        
-                        // UUID parameter
-                        new SqlParameter("p_i_created_by", Types.OTHER),
-                        new SqlParameter("p_i_author_name", Types.VARCHAR),
-                        new SqlParameter("p_i_scopes", Types.VARCHAR),
-                        new SqlOutParameter("p_json_result", Types.OTHER)
+                            // OUT first or last is fine with SimpleJdbcCall as long as it's declared
+                            new SqlOutParameter("p_json_result", Types.OTHER),
+
+                            // IN params — EXACT names must match the procedure signature
+                            new SqlParameter("p_i_flag", Types.VARCHAR),
+                            new SqlParameter("p_i_reference_no", Types.VARCHAR),
+                            new SqlParameter("p_i_date", Types.DATE),
+                            new SqlParameter("p_i_expiration_at", Types.DATE),
+                            new SqlParameter("p_i_company_name", Types.VARCHAR),
+                            new SqlParameter("p_i_attention", Types.VARCHAR),
+                            new SqlParameter("p_i_designation", Types.VARCHAR),
+                            new SqlParameter("p_i_email", Types.VARCHAR),
+                            new SqlParameter("p_i_phone", Types.VARCHAR),
+                            new SqlParameter("p_i_address", Types.VARCHAR),
+                            new SqlParameter("p_i_website", Types.VARCHAR),
+                            new SqlParameter("p_i_subject", Types.VARCHAR),
+                            new SqlParameter("p_i_project", Types.VARCHAR),
+                            new SqlParameter("p_i_title", Types.VARCHAR),
+                            new SqlParameter("p_i_currency_code", Types.VARCHAR),
+                            new SqlParameter("p_i_vat", Types.NUMERIC),
+                            new SqlParameter("p_i_columns", Types.VARCHAR), // JSON as text
+                            new SqlParameter("p_i_rows", Types.VARCHAR),    // JSON as text
+                            new SqlParameter("p_i_created_by", Types.OTHER), // UUID
+                            new SqlParameter("p_i_author_name", Types.VARCHAR),
+                            new SqlParameter("p_i_scopes", Types.VARCHAR),   // JSON as text
+
+                            // NEW optional inputs
+                            new SqlParameter("p_i_status", Types.VARCHAR),
+                            new SqlParameter("p_i_approval_date", Types.DATE),
+                            new SqlParameter("p_i_completion_time", Types.TIMESTAMP),
+                            new SqlParameter("p_i_order_time", Types.TIMESTAMP),
+                            new SqlParameter("p_i_internal_completion", Types.OTHER) // interval
                     );
 
             Map<String, Object> result = call.execute(inputParams);
@@ -111,6 +113,7 @@ public class StoredProcClient {
             throw new RuntimeException("Failed to call stored procedure: " + procName, ex);
         }
     }
+
     
     public JsonNode callGetQuotationWithDetails(String procName, UUID quotationId) {
         try {
@@ -129,6 +132,30 @@ public class StoredProcClient {
         } catch (Exception ex) {
             logger.error("Error in callGetQuotationWithDetails: {}", procName, ex);
             throw new RuntimeException("Failed to fetch quotation details for PDF", ex);
+        }
+    }
+    
+    public JsonNode callCompanyStats(String procName, UUID createdBy) {
+        try {
+            SimpleJdbcCall call = new SimpleJdbcCall(jdbcTemplate)
+                    .withSchemaName("dnrcore")
+                    .withProcedureName(procName)
+                    .withoutProcedureColumnMetaDataAccess()
+                    .declareParameters(
+                        new SqlOutParameter("p_json_result", Types.OTHER),
+                        new SqlParameter("p_i_created_by", Types.OTHER) // UUID, nullable
+                    );
+
+            // DO NOT use Map.of(...) because createdBy may be null
+            Map<String, Object> in = new java.util.HashMap<>();
+            in.put("p_i_created_by", createdBy); // null is OK in HashMap
+
+            Map<String, Object> result = call.execute(in);
+            Object json = result.get("p_json_result");
+            return objectMapper.readTree(String.valueOf(json));
+
+        } catch (Exception ex) {
+            throw new RuntimeException("Failed to call stored procedure: " + procName, ex);
         }
     }
 

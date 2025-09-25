@@ -80,45 +80,63 @@ public class QuotationService {
         return procClient.callPaginatedProc("prr_get_paginated_quotations", params);
     }
 
+ // QuotationService.java  — ONLY the createQuotation method shown/changed
     public JsonNode createQuotation(QuotationRequest request) {
-        
         UUID userId = getLoggedInUserId();
         String username = getLoggedInUsername();
 
         try {
             Map<String, Object> params = new HashMap<>();
             ObjectMapper mapper = new ObjectMapper();
-            
-            params.put("p_i_flag", safe(request.getFlag()));
-            params.put("p_i_reference_no", safe(request.getReferenceNo()));
-            params.put("p_i_date", new java.sql.Date(request.getDate().getTime()));
-            params.put("p_i_expiration_at", new java.sql.Date(request.getExpirationAt().getTime()));            
-            params.put("p_i_company_name", safe(request.getCompanyName()));
-            params.put("p_i_attention", safe(request.getAttention()));
-            params.put("p_i_designation", safe(request.getDesignation()));
-            params.put("p_i_email", safe(request.getEmail()));
-            params.put("p_i_phone", safe(request.getPhone()));
-            params.put("p_i_address", safe(request.getAddress()));
-            params.put("p_i_website", safe(request.getWebsite()));
-            params.put("p_i_subject", safe(request.getSubject()));
-            params.put("p_i_project", safe(request.getProject()));
-            params.put("p_i_title", safe(request.getTitle()));
-            params.put("p_i_currency_code", request.getCurrencyCode());
-            params.put("p_i_vat", request.getVat());
-            params.put("p_i_columns", mapper.writeValueAsString(request.getColumns())); // ✅ JSON -> string
-            params.put("p_i_rows", mapper.writeValueAsString(request.getRows()));  
-            params.put("p_i_scopes", mapper.writeValueAsString(
-                    request.getScopes() != null ? request.getScopes() : List.of()
-                ));
-            params.put("p_i_created_by", userId);
-            params.put("p_i_author_name", username);
 
+            // fallbacks to keep DB happy
+            String columnsJson = mapper.writeValueAsString(
+                request.getColumns() != null ? request.getColumns() : List.of()
+            );
+            String rowsJson = mapper.writeValueAsString(
+                request.getRows() != null ? request.getRows() : List.of()
+            );
+            String scopesJson = mapper.writeValueAsString(
+                request.getScopes() != null ? request.getScopes() : List.of()
+            );
+
+            params.put("p_i_flag",               request.getFlag() != null ? request.getFlag() : "N");
+            params.put("p_i_reference_no",       request.getReferenceNo()); // null => auto REF-xxx
+            params.put("p_i_date",               request.getDate() != null ? new java.sql.Date(request.getDate().getTime()) : null);
+            params.put("p_i_expiration_at",      request.getExpirationAt() != null ? new java.sql.Date(request.getExpirationAt().getTime()) : null);
+            params.put("p_i_company_name",       safe(request.getCompanyName()));
+            params.put("p_i_attention",          safe(request.getAttention()));
+            params.put("p_i_designation",        safe(request.getDesignation()));
+            params.put("p_i_email",              safe(request.getEmail()));
+            params.put("p_i_phone",              safe(request.getPhone()));
+            params.put("p_i_address",            safe(request.getAddress()));
+            params.put("p_i_website",            safe(request.getWebsite()));
+            params.put("p_i_subject",            safe(request.getSubject()));
+            params.put("p_i_project",            safe(request.getProject()));
+            params.put("p_i_title",              safe(request.getTitle()));
+            params.put("p_i_currency_code",      request.getCurrencyCode() != null ? request.getCurrencyCode().toUpperCase() : null);
+            params.put("p_i_vat",                request.getVat()); // BigDecimal OK
+            params.put("p_i_columns",            columnsJson);      // JSON → text
+            params.put("p_i_rows",               rowsJson);         // JSON → text
+            params.put("p_i_created_by",         userId);
+            params.put("p_i_author_name",        username);
+            params.put("p_i_scopes",             scopesJson);       // JSON → text
+
+            // NEW optional fields
+            params.put("p_i_status",             request.getStatus());
+            params.put("p_i_approval_date",      request.getApprovalDate() != null ? new java.sql.Date(request.getApprovalDate().getTime()) : null);
+            params.put("p_i_completion_time",    request.getCompletionTime() != null ? new java.sql.Timestamp(request.getCompletionTime().getTime()) : null);
+            params.put("p_i_order_time",         request.getOrderTime() != null ? new java.sql.Timestamp(request.getOrderTime().getTime()) : null);
+            params.put("p_i_internal_completion",request.getInternalCompletion()); // e.g. "10 days" (interval literal)
+
+            // ⬇️ call the ORIGINAL procedure (has OUT p_json_result)
             return procClient.callCreateQuotationProc("prr_create_quotation", params);
 
         } catch (Exception e) {
             throw new RuntimeException("Failed to create quotation: " + e.getMessage(), e);
         }
     }
+
     
     private String safe(String input) {
         return input != null ? input : "";

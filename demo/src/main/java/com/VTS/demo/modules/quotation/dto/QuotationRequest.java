@@ -27,6 +27,12 @@ public class QuotationRequest {
     private BigDecimal vat;
     private List<String> scopes;
     
+    private String status;                  
+    private Date approvalDate;              
+    private Date completionTime;            
+    private Date orderTime;                 
+    private String internalCompletion; 
+    
     public QuotationRequest() {}
     
 	public String getFlag() {
@@ -188,6 +194,48 @@ public class QuotationRequest {
 	public void setScopes(List<String> scopes) {
 		this.scopes = scopes;
 	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public Date getApprovalDate() {
+		return approvalDate;
+	}
+
+	public void setApprovalDate(Date approvalDate) {
+		this.approvalDate = approvalDate;
+	}
+
+	public Date getCompletionTime() {
+		return completionTime;
+	}
+
+	public void setCompletionTime(Date completionTime) {
+		this.completionTime = completionTime;
+	}
+
+	public Date getOrderTime() {
+		return orderTime;
+	}
+
+	public void setOrderTime(Date orderTime) {
+		this.orderTime = orderTime;
+	}
+
+	public String getInternalCompletion() {
+		return internalCompletion;
+	}
+
+	public void setInternalCompletion(String internalCompletion) {
+		this.internalCompletion = internalCompletion;
+	}
+	
+	
 	
 		    
 }
